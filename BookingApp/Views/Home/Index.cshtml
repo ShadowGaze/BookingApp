@@ -1,0 +1,281 @@
+﻿@{
+    ViewData["Title"] = "Book Slot";
+}
+
+@using Newtonsoft.Json
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Book Slot</title>
+
+    <link rel="stylesheet" href="~/css/Index.css" asp-append-version="true" />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#AddBooking').click(function () {
+                $('#customBookingModal').show();
+            });
+
+            $('#CloseModel').click(function () {
+                $('#customBookingModal').hide();
+            });
+
+        });
+    </script>
+
+
+
+    <script>
+        $(document).ready(function () {
+
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                eventClick: function (info) {
+
+                    var eventTitle = info.event.title;
+                    var eventStart = formatDate(info.event.start);
+                    var eventEnd = info.event.end ? formatDate(info.event.end) : 'N/A';
+
+                    Swal.fire({
+                        title: "Event Details",
+                        html: "Event Title: " + eventTitle + "<br>" +
+                            "Start Time: " + eventStart + "<br>" +
+                            "End Time: " + eventEnd,
+
+                    });
+
+                }
+            });
+
+            function formatDate(date) {
+                var day = String(date.getDate()).padStart(2, '0');
+                var month = String(date.getMonth() + 1).padStart(2, '0');
+                var year = date.getFullYear();
+                var hours = String(date.getHours()).padStart(2, '0');
+                var minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${day}/${month}/${year} ${hours}:${minutes}`;
+            }
+
+
+            $.ajax({
+                url: '@Url.Action("BookSlot", "Home")',
+                type: 'GET',
+                success: function (data) {
+                    calendar.removeAllEvents();
+                    calendar.addEventSource(data);
+                    calendar.render();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('Error occurred while fetching the booking slots.');
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var formattedDate = today.toISOString().split('T')[0];
+
+            $('#customFromDate').attr('min', formattedDate);
+            $('#customEndDate').attr('min', formattedDate);
+
+            $('#customFromDate').on('focus', function () {
+                $(this).attr('min', formattedDate);
+            });
+
+            $('#customEndDate').on('focus', function () {
+                $(this).attr('min', formattedDate);
+            });
+
+
+            $('#customStartTime').on('input', function () {
+                let timeValue = $(this).val();
+                if (timeValue) {
+                   
+                    let timeParts = timeValue.split(':');
+                    let hours = timeParts[0];
+
+                    $(this).val(hours + ":00");
+                }
+            });
+
+            $('#customEndTime').on('input', function () {
+                let timeValue = $(this).val();
+                if (timeValue) {
+
+                    let timeParts = timeValue.split(':');
+                    let hours = timeParts[0];
+
+                    $(this).val(hours + ":00");
+                }
+            });
+        });
+    </script>
+
+
+</head>
+<body>
+
+    <div class="container">
+
+        @if (Context.Session.GetString("Username") != "admin")
+        {
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="display-4">Book Your Slot</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button class="button-29" id="AddBooking">Add Booking</button>
+                </div>
+            </div>
+        }
+
+        @if (Context.Session.GetString("Username") == "admin")
+        {
+            <div class="row">
+                <div style="margin-top:10px; margin-bottom:10px;" class="col-md-12 text-center">
+                    <h1 class="display-4">All Booked Slots Details</h1>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-12">
+                <div id="calendar"></div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- Modal for booking -->
+    <div class="custom-modal" id="customBookingModal">
+
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title" id="customBookingModalLabel">Book Slot</h5>
+            <button type="button" id="CloseModel" class="custom-close-button">
+                <span>&times;</span>
+            </button>
+        </div>
+
+        <div class="custom-modal-body">
+            <form id="customBookingForm" method="post" asp-action="CreateBooking">
+                <div class="custom-form-group">
+                    <label for="customName">Event Name</label>
+                    <input type="text" class="custom-form-control" id="customName" name="name" required>
+                </div>
+
+                <div class="custom-form-group">
+                    <label for="customShowDate">Start Date</label>
+                    <input type="date" class="custom-form-control" id="customFromDate" name="fromDate" required>
+                </div>
+
+                <div class="custom-form-group">
+                    <label for="customStartTime">Start Time (Hour)</label>
+                    <input type="time" class="custom-form-control" id="customStartTime" name="startTime" required>
+                </div>
+
+                <div class="custom-form-group">
+                    <label for="customShowDate">End Date</label>
+                    <input type="date" class="custom-form-control" id="customEndDate" name="endDate" required>
+                </div>
+
+                <div class="custom-form-group">
+                    <label for="customEndTime">End Time (Hour)</label>
+                    <input type="time" class="custom-form-control" id="customEndTime" name="endTime" required>
+                </div>
+
+                <div class="custom-checkboxes">
+                    <div class="custom-form-group">
+                        <label>Select facilities Needed :</label>
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" name="selectedFacilities" value="Auditorium"> Auditorium
+                            </label>
+                            <br />
+                            <label>
+                                <input type="checkbox" name="selectedFacilities" value="Cafeteria"> Cafeteria
+                            </label>
+                            <br />
+                            <label>
+                                <input type="checkbox" name="selectedFacilities" value="Parking"> Parking
+                            </label>
+                            <br />
+                            <label>
+                                <input type="checkbox" name="selectedFacilities" value="ArtGallery"> Art Gallery
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="custom-btn">Confirm Booking</button>
+            </form>
+        </div>
+
+
+
+    </div>
+
+    @{
+        var successMessage = ViewBag.SuccessMessage;
+    }
+
+    @{
+        var FailedMessage = ViewBag.FailedMessage;
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <script>
+
+            Swal.fire({
+                title: 'Success!',
+                text: '@successMessage',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+
+                window.location.href = '@Url.Action("CheckStat", "Home")';
+            });
+        </script>
+    }
+
+    @if (!string.IsNullOrEmpty(FailedMessage))
+    {
+        <script>
+
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: '@FailedMessage'
+
+            });
+        </script>
+    }
+
+
+
+</body>
+</html>

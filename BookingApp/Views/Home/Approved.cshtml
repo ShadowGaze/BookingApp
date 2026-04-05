@@ -1,0 +1,69 @@
+﻿@model List<BookingApp.Models.BookingModel>
+
+@{
+    ViewData["Title"] = "Approved";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Approved</title>
+
+    <link rel="stylesheet" href="~/css/Approved.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".Actionbtn").click(function () {
+                var bookingId = $(this).data("id");
+
+                window.location.href = '/Home/Approvement_Letter/' + bookingId;
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <h1>Approved Bookings</h1>
+    <hr />
+
+    <table class="table" id="BookingsTable">
+        <thead>
+            <tr>
+                <th>Booking Id</th>
+                <th>Name</th>
+                <th>Booking Date</th>
+                <th>Start Date</th>
+                <th>Start Time</th>
+                <th>End Date</th>
+                <th>End Time</th>
+                <th>Action</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.Id</td>
+                    <td>@booking.name</td>
+                    <td>@booking.BookingDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.FromDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.startTime</td>
+                    <td>@booking.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.endTime</td>
+                    <td>
+                        <button class="Actionbtn" data-id="@booking.Id">Download</button>
+                    </td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>
+

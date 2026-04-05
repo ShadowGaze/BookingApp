@@ -1,0 +1,95 @@
+﻿@model List<BookingApp.Models.BookingModel>
+
+@{
+    ViewData["Title"] = "AdminPanel";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] AdminPanel</title>
+
+    <link rel="stylesheet" href="~/css/AdminPanel.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).on('click', '.approve-btn', function () {
+            var bookingId = $(this).data('id');
+            updateBookingStatus(bookingId, 2);
+        });
+
+        $(document).on('click', '.reject-btn', function () {
+            var bookingId = $(this).data('id');
+            updateBookingStatus(bookingId, 4);
+        });
+
+        function updateBookingStatus(bookingId, status) {
+            $.ajax({
+                url: '@Url.Action("UpdateBookingStatus", "Home")',
+                type: 'POST',
+                data: { bookingId: bookingId, bookingStatus: status },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: "Success!",
+                            text: "Booking Status Updated successfully!",
+                            icon: "success",
+                            showConfirmButton: true
+                        }).then(() => {
+
+                            window.location.href = window.location.href;
+                        });
+                    } else {
+                        Swal.fire('Error!', response.message, 'error');
+                    }
+                }
+            });
+        }
+    </script>
+
+</head>
+<body>
+    <h1>New Pending Bookings</h1>
+    <hr />
+
+    <table class="table" id="BookingsTable">
+        <thead>
+            <tr>
+                <th>Booking Id</th>
+                <th>Name</th>
+                <th>Booking Date</th>
+                <th>Start Date</th>
+                <th>Start Time</th>
+                <th>End Date</th>
+                <th>End Time</th>
+                <th>Approve</th>
+                <th>Reject</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.Id</td>
+                    <td>@booking.name</td>
+                    <td>@booking.BookingDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.FromDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.startTime</td>
+                    <td>@booking.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.endTime</td>
+                    <td>
+                    <button class="btn btn-success approve-btn" data-id="@booking.Id">Approve</button>
+                    </td>
+                    <td>
+                    <button class="btn btn-danger reject-btn" data-id="@booking.Id">Reject</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

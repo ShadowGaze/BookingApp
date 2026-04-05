@@ -1,0 +1,145 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('../images/dark-black-orange-3d-abstract-wallpaper-picjumbo-com.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    max-width: 600px;
+    margin: 70px auto;
+    margin-top: 80px;
+    margin-bottom: 60px;
+    padding: 50px;
+}
+
+#Copyright {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 300;
+    position: relative;
+    margin-bottom: 18px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-size: 35px;
+    font-weight: 700;
+    
+}
+
+.containerparts1 {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+    color: #161f29;
+    margin-bottom: 5px;
+}
+
+input.control {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+    input.control:hover {
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    }
+
+.text-danger {
+    color: red;
+    font-size: 16px;
+}
+
+.btn-submit {
+    margin-top: 10px;
+    width: 100%;
+    padding: 13px;
+    background-color: #6b42c9;
+    border: none;
+    border-radius: 22px;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-submit:hover {
+        background-color: #3a246e;
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    }
+
+.RegisterLink {
+    text-align: center;
+    margin-top: 10px;
+}
+
+    .RegisterLink a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+        .RegisterLink a:hover {
+            text-decoration: underline;
+        }
+
+.name-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.containerparts {
+    margin-bottom: 20px;
+    width: 48%;
+}
+
+input.control, textarea.control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    transition: border-color 0.3s;
+}
+
+    input.control:hover, textarea.control:hover {
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    }
+
+textarea.control {
+    min-height: 120px;
+}
+
+@media (max-width: 768px) {
+    .name-container {
+        flex-direction: column;
+    }
+
+    .containerparts {
+        width: 100%;
+    }
+}
+

@@ -1,0 +1,394 @@
+﻿@model IEnumerable<BookingModel>
+
+@{
+    ViewData["Title"] = "Check Status";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Check Status</title>
+
+    <link rel="stylesheet" href="~/css/CheckStat.css" asp-append-version="true" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#printReceiptButton').click(function () {
+                var printContent = $('#receiptModal .container').html();
+
+
+                var printWindow = window.open('', '', 'height=800,width=800');
+
+
+                printWindow.document.write('<html><head><title>Receipt</title>');
+                printWindow.document.write('<style>/* Print Styles */ body { font-family: Arial, sans-serif; } .container { width: 100%; max-width: 100%; margin: 0; padding: 0; } table { width: 100%; border-collapse: collapse; } table, th, td { border: 1px solid black; } th, td { padding: 10px; text-align: center; }</style>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write(printContent);
+
+                printWindow.document.close();
+                printWindow.focus();
+                printWindow.print();
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+
+
+
+            $('#Pendingbtn').on('click', function () {
+                loadBookings(1);
+            });
+
+            $('#Approvedbtn').on('click', function () {
+                loadBookings(2);
+            });
+
+            $('#Cancelledbtn').on('click', function () {
+                loadBookings(3);
+            });
+
+
+            function loadBookings(status) {
+                $.get('/Home/GetBookingsByStatus?status=' + status, function (data) {
+                    var tableContent = '';
+                    $.each(data, function (index, booking) {
+                        var statusText = '';
+                        var actionButton = '';
+
+
+                        if (booking.BookingStatus == 1) {
+                            statusText = 'Pending';
+                            actionButton = `<button class="cancel-button" data-id="${booking.Id}">Cancel</button>`;
+                        }
+                        else if (booking.BookingStatus == 2) {
+                            statusText = 'Approved';
+                            actionButton = `<button class="download-button" data-id="${booking.Id}">Download</button>`;
+                        }
+                        else if (booking.BookingStatus == 3) {
+                            statusText = 'Cancelled';
+                            actionButton = '';
+                        }
+
+
+                        tableContent += `
+                                            <tr>
+                                                <td>${booking.Id}</td>
+                                                <td>${booking.name}</td>
+                                                <td>${formatDate(booking.BookingDate)}</td>
+                                                <td>${booking.startTime}</td>
+                                                <td>${booking.endTime}</td>
+                                                <td>${formatDate(booking.FromDate)}</td>
+                                                <td>${formatDate(booking.EndDate)}</td>
+                                                <td>${statusText}</td>
+                                                <td>${actionButton}</td>
+                                            </tr>
+                                        `;
+                    });
+
+
+                    $('#BookingsTable tbody').html(tableContent);
+                });
+            }
+
+
+            $(document).on('click', '.cancel-button', function () {
+                var bookingId = $(this).data('id');
+                var button = $(this);
+
+                $.ajax({
+                    url: '/Home/CancelBooking/' + bookingId,
+                    method: 'POST',
+                    success: function (data) {
+                        if (data.success) {
+                            button.text('Cancelled');
+                            Swal.fire({
+                                title: "Success!",
+                                text: "Booking cancelled successfully!",
+                                icon: "success",
+                                showConfirmButton: true
+                            }).then(() => {
+
+                                window.location.href = window.location.href;
+                            });
+                        } else {
+                            alert('Error: Could not cancel the booking.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('An error occurred while canceling the booking.');
+                    }
+                });
+            });
+
+
+            // $(document).on('click', '.download-button', function () {
+            //     var bookingId = $(this).data('id');
+            //     $('#RecieptId').text(bookingId);
+            //     $('#receiptModal').fadeIn();
+            // });
+
+
+
+            $('#closeModalButton').click(function () {
+                $('#receiptModal').fadeOut();
+            });
+
+
+
+
+            function formatDate(date) {
+                var formattedDate = new Date(date);
+                return formattedDate.toLocaleDateString();
+            }
+        });
+    </script>
+
+    <script>
+        $(document).on('click', '.download-button', function () {
+            var bookingId = $(this).data('id');
+            var bookingStartTime = $(this).data('starttime');
+            var bookingEndTime = $(this).data('endtime');
+            var bookingStartDate = $(this).attr('data-fromdate');
+            var bookingEndDate = $(this).attr('data-enddate');
+
+
+            $('#RecieptId').text(bookingId);
+            $('#receiptModal').fadeIn();
+
+            $.ajax({
+                url: '/Home/GetFacilities/' + bookingId,
+                method: 'GET',
+                data: {
+                    bookingStartTime: bookingStartTime,
+                    bookingEndTime: bookingEndTime,
+                    bookingStartDate: bookingStartDate,
+                    bookingEndDate: bookingEndDate
+                },
+                success: function (data) {
+                    let selectedFacilities = data.selectedFacilities;
+                    //let totalRentCharge = data.totalRentCharge;
+                    let extraHourCharge = data.extraHourCharge;
+                    let rentCharge = data.rentCharge;
+                    let serviceCharge = data.serviceCharge;
+                    let securityDeposit = data.securityDeposit;
+                    let generatorcharge = data.generatorcharge;
+                    let cgst = data.cgst;
+                    let sgst = data.sgst;
+                    let totalAmount = data.totalAmount;
+                    //let Hourlycharge = data.totalHourlyCharge;
+
+                    $('#receiptModal tbody').empty();
+
+                    var facilityRow = '<tr>' +
+                        '<td colspan="2" class="facility-name"><strong>Facilities Charges</strong></td>' +
+                        '</tr>';
+
+                    $('#receiptModal tbody').append(facilityRow);
+
+                   
+                    for (const facilityName in selectedFacilities) {
+                        if (selectedFacilities.hasOwnProperty(facilityName)) {
+
+                            var row = '<tr>' +
+                                '<td style="color:purple;" class="col-md-7"><em>' + facilityName + '</em></td>' +
+                                '<td class="col-md-3 text-center">' + '₹' + selectedFacilities[facilityName].toFixed(2) + '</td>' +
+                                '</tr>';
+                            $('#receiptModal tbody').append(row);
+                        }
+                    }
+
+                    var facilityRow = '<tr>' +
+                        '<td colspan="2" class="facility-name"><strong>Taxes & Other Charges</strong></td>' +
+                        '</tr>';
+
+                    $('#receiptModal tbody').append(facilityRow);
+
+                    var chargeRow6 = '<tr>' +
+                        '<td style="color:purple; class="col-md-7"><em>Extra Hours Charges [₹4500/hr (above 6 hours)] :</em></td>' +
+                        '<td class="col-md-3 text-center">' + '₹' + extraHourCharge.toFixed(2) + '</td>' +
+                        '</tr>';
+                    $('#receiptModal tbody').append(chargeRow6);
+                    
+
+                    var chargeRow2 = '<tr>' +
+                        '<td style="color:purple; class="col-md-7"><em>Generator Charge :</em></td>' +
+                        '<td class="col-md-3 text-center">' + '₹' + generatorcharge.toFixed(2) + '</td>' +
+                        '</tr>';
+                    $('#receiptModal tbody').append(chargeRow2);
+
+                    var chargeRow3 = '<tr>' +
+                        '<td style="color:purple; class="col-md-7"><em>Security Deposit (20%) :</em></td>' +
+                        '<td class="col-md-3 text-center">' + '₹' + securityDeposit.toFixed(2) + '</td>' +
+                        '</tr>';
+                    $('#receiptModal tbody').append(chargeRow3);
+
+                    var chargeRow1 = '<tr>' +
+                        '<td style="color:purple; class="col-md-7"><em>Service Charge (10%) :</em></td>' +
+                        '<td class="col-md-3 text-center">' + '₹' + serviceCharge.toFixed(2) + '</td>' +
+                        '</tr>';
+                    $('#receiptModal tbody').append(chargeRow1);
+
+                    var chargeRow4 = '<tr>' +
+                        '<td style="color:purple; class="col-md-7"><em>CGST (9%) :</em></td>' +
+                        '<td class="col-md-3 text-center">' + '₹' + cgst.toFixed(2) + '</td>' +
+                        '</tr>';
+                    $('#receiptModal tbody').append(chargeRow4);
+
+                    var chargeRow5 = '<tr>' +
+                        '<td style="color:purple; class="col-md-7"><em>SGST (9%) :</em></td>' +
+                        '<td class="col-md-3 text-center">' + '₹' + sgst.toFixed(2) + '</td>' +
+                        '</tr>';
+                    $('#receiptModal tbody').append(chargeRow5);
+
+                    
+                    var totalRow = '<tr>' +
+                        '<td style="color:#472624;" class="col-md-7"><strong>Total Amount</strong></td>' +
+                        '<td style="color:red;" class="col-md-3 text-center"><strong>' + '₹' + totalAmount.toFixed(2) + '</strong></td>' +
+                        '</tr>';
+                    $('#receiptModal tbody').append(totalRow);
+                },
+                error: function (xhr, status, errorThrown) {
+                    console.log("Error details: ", errorThrown);
+                    alert('Error fetching selected facilities and pricing.');
+                }
+            });
+        });
+    </script>
+
+
+</head>
+<body>
+    <h1>Check Status</h1>
+
+    <hr />
+
+    <table class="table" id="BookingsTable">
+        <thead>
+            <tr>
+                <th>Booking Id</th>
+                <th>Name</th>
+                <th>Booking Date</th>
+                <th>Start Date</th>
+                <th>Start Time</th>
+                <th>End Date</th>
+                <th>End Time</th>
+                <th>Booking Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var booking in Model)
+            {
+                var statusText = "";
+                var actionButton = "";
+
+                if (booking.BookingStatus == 1)
+                {
+                    statusText = "Pending";
+                    actionButton = $"<button class='cancel-button Actionbtn' data-id='{booking.Id}'>Cancel</button>";
+                }
+                else if (booking.BookingStatus == 2)
+                {
+                    statusText = "Approved";
+                    actionButton = $"<button class='download-button Actionbtn' data-fromdate ='{booking.FromDate.ToString("dd-MM-yyyy")}' data-enddate ='{booking.EndDate.ToString("dd-MM-yyyy")}' data-id='{booking.Id}' data-starttime='{booking.startTime}' data-endtime='{booking.endTime}'>Download</button>";
+                }
+                else if (booking.BookingStatus == 3)
+                {
+                    statusText = "Cancelled";
+                    actionButton = "";
+                }
+                else if (booking.BookingStatus == 4)
+                {
+                    statusText = "Rejected";
+                    actionButton = "";
+                }
+
+                <tr>
+                    <td>@booking.Id</td>
+                    <td>@booking.name</td>
+                    <td>@booking.BookingDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.FromDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.startTime</td>
+                    <td>@booking.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.endTime</td>
+                    <td>@statusText</td>
+                    <td>@Html.Raw(actionButton)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+    <!-- Model for download -->
+
+    <div id="receiptModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Receipt</h5>
+                <button class="close" id="closeModalButton">&times;</button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <address>
+                                <strong>Apex Bank</strong>
+                                <br>
+                                New Main Market Rd.
+                                <br>
+                                Bhopal, (M.P.) 462003
+                                <br>
+                                <i class="fa-solid fa-phone"></i> +91 7552674752
+                                <br />
+                                <em>Receipt #: <label id="RecieptId"></label></em>
+                            </address>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center">
+                            <h1>Receipt</h1>
+                        </div>
+                        <table  class="receipt-table">
+                            <thead id="receipt-table-head">
+                                <tr  id="receipt-table-header-row">
+                                    <th id="product-header" class="receipt-table-header">Product</th>
+                                    <th id="price-header" class="receipt-table-header text-center">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="receipt-table-body">
+                               
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                @* <button type="button" class="btn btn-success btn-lg btn-block">
+                    Pay Now
+                </button> *@
+                <button id="printReceiptButton" class="btn btn-primary">Print Receipt</button>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

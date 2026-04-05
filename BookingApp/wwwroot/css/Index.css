@@ -1,0 +1,187 @@
+﻿
+
+h1.display-4 {
+    font-family: 'Arial', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+p {
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+    padding-bottom:20px;
+}
+
+/*#AddBooking {
+    padding: 12px;
+    background-color: #333;
+    color: #fff;
+    border: 2px solid #444;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    #AddBooking:hover {
+        background-color: #555;
+        border-color: #666;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #AddBooking:active {
+        background-color: #444;
+        border-color: #555;
+        transform: translateY(2px);
+    }
+
+    #AddBooking:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 165, 39, 0.5);
+    }*/
+
+
+
+
+.custom-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    background-color: #222;
+    width: 400px;
+    padding: 20px;
+    z-index: 1050;
+    color: white;
+    border-radius: 0;
+}
+
+
+.custom-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #222;
+    color: white;
+    font-size: 20px;
+    border-bottom: 1px solid #444;
+}
+
+
+.custom-close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+}
+
+    
+    .custom-close-button:hover {
+        color: #f44336;
+    }
+
+
+.custom-form-group {
+    margin-bottom: 15px;
+}
+
+.custom-modal-body{
+    margin-top:5px;
+}
+
+
+.custom-form-control {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background-color: #8f8f8f;
+    color: white;
+    border: 1px solid #555;
+    border-radius: 0;
+}
+
+
+
+.custom-btn {
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+    color: white;
+    margin-top:5px;
+    margin-bottom:2px;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    background-size: 200% 100%;
+    transition: background-position 1s ease;
+}
+
+    .custom-btn:hover {
+        background-position: 100% 0%;
+    }
+
+
+.button-29 {
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    border: 0;
+    margin-top: 10px;
+    border-radius: 6px;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "JetBrains Mono",monospace;
+    height: 48px;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    padding-left: 16px;
+    padding-right: 16px;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s,transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    font-size: 18px;
+}
+
+    .button-29:focus {
+        box-shadow: #3c4fe0 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+    }
+
+    .button-29:hover {
+        box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+        transform: translateY(-2px);
+    }
+
+    .button-29:active {
+        box-shadow: #3c4fe0 0 3px 7px inset;
+        transform: translateY(2px);
+    }
+
+
+
+

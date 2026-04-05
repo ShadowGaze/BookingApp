@@ -1,0 +1,106 @@
+﻿.table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#BookingsTable tr {
+    height: 80px;
+}
+
+#BookingsTable td, #BookingsTable th {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+
+#BookingsTable {
+    width: 100%;
+    table-layout: fixed;
+}
+
+
+    #BookingsTable td, #BookingsTable th {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+
+.table thead {
+    background-color: #664680;
+    color: #ffffff;
+}
+
+    .table thead th {
+        padding: 15px;
+        text-align: left;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+
+.table tbody {
+    color: #333;
+}
+
+    .table tbody td {
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+
+
+.table td, .table th {
+    border-bottom: 1px solid #ddd;
+}
+
+
+.table thead th {
+    border-bottom: 2px solid #0056b3;
+}
+
+
+.table td:first-child {
+    font-weight: bold;
+    color: #007bff;
+}
+
+
+
+.Actionbtn {
+    padding: 15px;
+    border: 0;
+    text-decoration: none;
+    border-radius: 0.1875em;
+    background-color: #7066e0;
+    box-shadow: none;
+    color: #fff;
+    font-size: 1.125em;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    width: 100px;
+}
+
+    .Actionbtn:hover {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+        color: white;
+    }

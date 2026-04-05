@@ -1,0 +1,128 @@
+﻿@model BookingApp.Models.Register
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Registration</title>
+    <link rel="stylesheet" href="~/css/Register.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="shortcut icon" href="~/images/favicon.png" />
+
+    <script>
+        function addCountryCode() {
+            const input = document.getElementById('mobileNumber');
+
+           
+            if (!input.value.startsWith('+91')) {
+                input.value = '+91' + input.value.replace(/^\+91/, '');
+            }
+
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
+
+       
+    </script>
+
+
+
+
+</head>
+<body>
+
+    <div class="container">
+        <h1>REGISTER</h1>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="name-container">
+                <div class="containerparts">
+                    <label asp-for="FirstName" class="label">First Name</label>
+                    <input asp-for="FirstName" class="control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="containerparts">
+                    <label asp-for="LastName" class="label">Last Name</label>
+                    <input asp-for="LastName" class="control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="containerparts1">
+                <label asp-for="CompanyName" class="label">Company Name</label>
+                <input asp-for="CompanyName" class="control" />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+            
+            <div class="containerparts1">
+                <label asp-for="Number" class="label">Mobile Number</label>
+                <input asp-for="Number" class="control" type="tel" id="mobileNumber" onfocus="addCountryCode()" oninput="checkPrefix()" maxlength="13" />
+                <span asp-validation-for="Number" class="text-danger" id="validationMessage"></span>
+            </div>
+
+            <div class="containerparts1">
+                <label asp-for="EmailId" class="label">Email Id</label>
+                <input asp-for="EmailId" class="control" />
+                <span asp-validation-for="EmailId" class="text-danger"></span>
+            </div>
+            <div class="containerparts1">
+                <label asp-for="Address" class="label"></label>
+                <textarea asp-for="Address" class="control"></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="containerparts1">
+                <label asp-for="Username" class="label"></label>
+                <input asp-for="Username" class="control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="containerparts1">
+                <label asp-for="Password" class="label"></label>
+                <input asp-for="Password" class="control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="containerparts1">
+                <input type="submit" value="Register" class="btn-submit" />
+            </div>
+        </form>
+
+        <br />
+        <div class="RegisterLink">
+            Go Back To <a asp-controller="Home" asp-action="Default">Login</a> Page.
+        </div>
+    </div>
+
+    <div id="Copyright">&copy; 2025 Bhawan Booking App. All rights reserved</div>
+
+    @{
+        var successMessage = ViewBag.SuccessMessage;
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <script>
+           
+            Swal.fire({
+                title: 'Success!',
+                text: '@successMessage',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Redirect to Home after the alert
+                window.location.href = '@Url.Action("Default", "Home")';
+            });
+        </script>
+    }
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+
+</body>
+</html>
+

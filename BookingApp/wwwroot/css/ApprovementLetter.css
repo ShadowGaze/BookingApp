@@ -1,0 +1,67 @@
+﻿body {
+    width: 100%;
+    max-width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.receipt-table {
+    width: 100%;
+    max-width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+
+.receipt-table-header {
+    background-color: #f4f4f4;
+    color: #333;
+    text-align: left;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.text-center {
+    text-align: center;
+}
+
+#receipt-table-body tr {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+    #receipt-table-body tr:hover {
+        background-color: #f9f9f9;
+    }
+
+#receipt-table-body td {
+    padding: 8px 15px;
+    font-size: 14px;
+    color: #555;
+}
+
+#receipt-table-body tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#receipt-table-body tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+#product-header {
+    width: 70%;
+}
+
+#price-header {
+    width: 30%;
+}
+
+#receipt-table-head {
+    margin-bottom: 10px;
+}

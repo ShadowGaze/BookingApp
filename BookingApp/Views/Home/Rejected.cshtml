@@ -1,0 +1,54 @@
+﻿@model List<BookingApp.Models.BookingModel>
+
+@{
+    ViewData["Title"] = "Rejected";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Rejected</title>
+
+    <link rel="stylesheet" href="~/css/Rejected.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <h1>Rejected Bookings</h1>
+    <hr />
+
+    <table class="table" id="BookingsTable">
+        <thead>
+            <tr>
+                <th>Booking Id</th>
+                <th>Name</th>
+                <th>Booking Date</th>
+                <th>Start Date</th>
+                <th>Start Time</th>
+                <th>End Date</th>
+                <th>End Time</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.Id</td>
+                    <td>@booking.name</td>
+                    <td>@booking.BookingDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.FromDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.startTime</td>
+                    <td>@booking.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>@booking.endTime</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>
